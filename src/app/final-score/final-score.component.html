@@ -1,0 +1,12 @@
+<div class="flex justify-between">
+  <div>User</div>
+  <div>Score</div>
+</div>
+@for (user of score$ | async; track $index) {
+<!-- Only show top 5 and this users score -->
+@if($index < 20 || user.id === gameService.userRef?.id) {
+<div class="flex justify-between text-xl">
+  <div>{{ $index + 1 }}. {{ user.name }}</div>
+  <div>{{ user.score }}</div>
+</div>
+} }

@@ -1,0 +1,52 @@
+@if(game$ | async; as game) {
+<div>
+  <h2>{{ game.name }}</h2>
+</div>
+<div class="flex items-baseline">
+  @if(game.status === 'PENDING') {
+  <button mat-flat-button class="mr-4" (click)="startGame()">Start game</button>
+  } @if(game.status === 'STARTED') { @if(game.words.length) {
+  <button mat-flat-button (click)="nextWord()">Next word</button>
+  }
+  <span class="ml-2 mr-3">Words left: {{ game.words.length }}</span>
+  <button mat-flat-button (click)="endGame()">End game</button>
+  }
+</div>
+}
+
+<div class="mt-5">
+  <div>Add word</div>
+  <form (ngSubmit)="addWord()" [formGroup]="form">
+    <mat-form-field appearance="fill">
+      <mat-label>Enter word</mat-label>
+      <input matInput formControlName="word" placeholder="Word" />
+    </mat-form-field>
+    <button
+      class="ml-3"
+      mat-flat-button
+      [disabled]="form.invalid"
+      type="submit"
+    >
+      Add word
+    </button>
+  </form>
+</div>
+
+<div class="mt-4">
+  <hr />
+  <div class="pt-2">Create new game?</div>
+  <form (ngSubmit)="createGame()" [formGroup]="gameForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Game name</mat-label>
+      <input matInput formControlName="name" placeholder="Name" />
+    </mat-form-field>
+    <button
+      class="ml-3"
+      mat-flat-button
+      [disabled]="gameForm.invalid"
+      type="submit"
+    >
+      New game
+    </button>
+  </form>
+</div>

@@ -1,0 +1,15 @@
+<div class="center-layout">
+  <h2>Enter your name to you join</h2>
+
+  <form class="mt-4" (ngSubmit)="submit()" [formGroup]="form">
+    <div class="flex items-baseline">
+      <mat-form-field class="mr-3">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" placeholder="Enter your name" />
+      </mat-form-field>
+      <button mat-raised-button [disabled]="form.invalid" type="submit">
+        Let's go
+      </button>
+    </div>
+  </form>
+</div>

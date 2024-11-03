@@ -1,0 +1,17 @@
+.user-list {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 250ms ease-out;
+  &.expanded {
+    grid-template-rows: 1fr;
+  }
+}
+
+.same-answer {
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  @apply font-extrabold;
+}
+.same-user {
+  @apply font-extrabold;
+}
