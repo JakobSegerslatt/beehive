@@ -25,18 +25,18 @@ export class FinalScoreComponent {
       // Grab by users and isolate these
       const users: Array<GameUser> = uniqBy(
         answers.map((a) => a.user),
-        (u) => u.id
+        (u) => u.id,
       );
       console.log(users);
 
       // Group answers by word
       const words: Array<string> = uniqBy(answers, (a: Answer) => a.word).map(
-        (w: Answer) => w.word
+        (w: Answer) => w.word,
       );
 
       words.forEach((word) => {
         const answersForWord = answers.filter((a) =>
-          this.isSameWord(a.word, word)
+          this.isSameWord(a.word, word),
         );
 
         // For each word, group by answer
@@ -69,7 +69,7 @@ export class FinalScoreComponent {
 
       // Return users and scores
       return users.sort((a, b) => (b.score || 0) - (a.score || 0));
-    })
+    }),
   );
 
   isSameWord(a: string, b: string): boolean {

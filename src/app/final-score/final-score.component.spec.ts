@@ -8,9 +8,8 @@ describe('FinalScoreComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FinalScoreComponent]
-    })
-    .compileComponents();
+      imports: [FinalScoreComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FinalScoreComponent);
     component = fixture.componentInstance;

@@ -55,7 +55,7 @@ export class PlayComponent {
               if (!user) {
                 this.router.navigate(['/']);
               }
-            })
+            }),
           );
         }
       }),
@@ -74,7 +74,7 @@ export class PlayComponent {
               }
             });
         }
-      })
+      }),
     );
   }
 
@@ -110,7 +110,7 @@ export class PlayComponent {
       this.gameService.submitAnswer(
         this.gameService.user!,
         this.inputAnswer,
-        this.gameService.activeGame?.word!
+        this.gameService.activeGame?.word!,
       );
       this.inputAnswer = '';
     }

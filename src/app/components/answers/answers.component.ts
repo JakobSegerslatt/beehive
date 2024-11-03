@@ -35,7 +35,7 @@ export class AnswersComponent {
         }));
 
       return grouped;
-    })
+    }),
   );
 
   expand: Record<string, boolean> = {};

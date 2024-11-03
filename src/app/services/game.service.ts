@@ -73,7 +73,7 @@ export class GameService {
         const ref = doc(this.firestore, 'games', config.active);
         return docData(ref) as Observable<GameInfo>;
       }),
-      tap((game) => (this.activeGame = game))
+      tap((game) => (this.activeGame = game)),
     );
   }
 
@@ -82,7 +82,7 @@ export class GameService {
       this.firestore,
       'games',
       this.config.active,
-      'answers'
+      'answers',
     );
     const update: Answer = {
       user: {
@@ -147,7 +147,7 @@ export class GameService {
     setDoc(
       this.activeGameRef!,
       { status: GameStatus.STARTED },
-      { merge: true }
+      { merge: true },
     ).then(() => this.nextWord());
   }
 
@@ -155,7 +155,7 @@ export class GameService {
     setDoc(
       this.activeGameRef!,
       { status: GameStatus.COMPLETE },
-      { merge: true }
+      { merge: true },
     ).then(() => this.nextWord());
   }
 
@@ -171,10 +171,10 @@ export class GameService {
       this.firestore,
       'games',
       gameId,
-      'users'
+      'users',
     );
     this.userCollection$ = collectionData(this.userCollectionRef).pipe(
-      tap((x: Array<GameUser>) => (this.userCollection = x))
+      tap((x: Array<GameUser>) => (this.userCollection = x)),
     );
   }
 
@@ -183,14 +183,14 @@ export class GameService {
 
     this.userRef = doc(this.firestore, 'games', gameId, 'users', userId);
     this.user$ = docData(this.userRef).pipe(
-      tap((x: GameUser) => (this.user = x))
+      tap((x: GameUser) => (this.user = x)),
     );
   }
 
   private setGames() {
     this.gameCollectionRef = collection(this.firestore, 'games');
     this.gameCollection$ = collectionData(this.gameCollectionRef).pipe(
-      tap((x: Array<GameInfo>) => (this.gameCollection = x))
+      tap((x: Array<GameInfo>) => (this.gameCollection = x)),
     );
   }
 
@@ -202,7 +202,7 @@ export class GameService {
   private setAnswers(gameId: string) {
     this.answersRef = collection(this.firestore, 'games', gameId, 'answers');
     this.answers$ = collectionData(this.answersRef).pipe(
-      tap((x: Array<Answer>) => (this.answers = x))
+      tap((x: Array<Answer>) => (this.answers = x)),
     );
   }
 

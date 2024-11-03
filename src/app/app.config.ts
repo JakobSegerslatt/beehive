@@ -29,7 +29,7 @@ export const appConfig: ApplicationConfig = {
         authDomain: 'beehive-behave.firebaseapp.com',
         messagingSenderId: '1073595724091',
         measurementId: 'G-02KX4TWZ6S',
-      })
+      }),
     ),
     provideAnalytics(() => getAnalytics()),
     ScreenTrackingService,
