@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -24,8 +24,9 @@ import { GameService } from '../../services/game.service';
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
+  @Input() gameId?: string;
+
   private gameService: GameService = inject(GameService);
-  private router: Router = inject(Router);
 
   form = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -36,8 +37,6 @@ export class RegisterComponent {
 
     const name: string = this.form.value.name!.trim();
 
-    this.gameService
-      .createUser(name)
-      ?.then(() => this.router.navigate(['/play']));
+    this.gameService.createUser(name, this.gameId!);
   }
 }

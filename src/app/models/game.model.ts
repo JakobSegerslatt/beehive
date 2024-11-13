@@ -1,7 +1,6 @@
 import { GameUser } from './user.model';
 
 export interface GameInfo {
-  name: string;
   maxTime: number;
   status: GameStatus;
   active: boolean;

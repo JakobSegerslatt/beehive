@@ -4,6 +4,6 @@
 	{
 		"default"
 		:
-		"beehive-behave"
+		"play-hivemind"
 	}
 }

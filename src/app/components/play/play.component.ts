@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Observable, take, takeUntil, tap, timer } from 'rxjs';
@@ -14,6 +14,8 @@ import { MatInputModule } from '@angular/material/input';
 import { AnswersComponent } from '../answers/answers.component';
 import { Timer } from 'papilion';
 import { FinalScoreComponent } from '../../final-score/final-score.component';
+import { user } from '@angular/fire/auth';
+import { RegisterComponent } from '../register/register.component';
 
 @Component({
   selector: 'app-play',
@@ -26,6 +28,7 @@ import { FinalScoreComponent } from '../../final-score/final-score.component';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
+    RegisterComponent,
     FinalScoreComponent,
     AnswersComponent,
   ],
@@ -33,10 +36,15 @@ import { FinalScoreComponent } from '../../final-score/final-score.component';
   styleUrl: './play.component.scss',
 })
 export class PlayComponent {
-  private gameService: GameService = inject(GameService);
-  private router: Router = inject(Router);
+  @Input() set id(gameId: string) {
+    this.loadGame(gameId);
+    this.loadUser(gameId);
+    this._id = gameId;
+  }
+  _id?: string;
 
-  user$?: Observable<GameUser>;
+  public gameService: GameService = inject(GameService);
+
   game$?: Observable<GameInfo>;
   previousGame?: GameInfo;
 
@@ -45,20 +53,12 @@ export class PlayComponent {
   countdown$ = new BehaviorSubject<number>(0);
 
   inputAnswer = '';
-  constructor() {
-    // Wait for the game to load before we get the user
+  constructor() {}
+
+  loadGame(gameId: string) {
+    this.gameService.setActiveGame(gameId);
+
     this.game$ = this.gameService.activeGame$?.pipe(
-      tap(() => {
-        if (!this.user$) {
-          this.user$ = this.gameService.user$?.pipe(
-            tap((user) => {
-              if (!user) {
-                this.router.navigate(['/']);
-              }
-            }),
-          );
-        }
-      }),
       tap((game) => {
         if (game.word !== this.previousGame?.word) {
           this.previousGame = game;
@@ -76,6 +76,13 @@ export class PlayComponent {
         }
       }),
     );
+  }
+
+  loadUser(gameId: string) {
+    const userId = localStorage.getItem('hive-user');
+    if (userId) {
+      this.gameService.setUser(gameId, userId);
+    }
   }
 
   startTimer(seconds: number) {

@@ -1,6 +1,6 @@
-<div class="w-full center-layout">
-  @if (game$ | async; as game) {
-    @if (user$ | async; as user) {
+@if (game$ | async; as game) {
+  <div class="w-full center-layout">
+    @if (gameService.user$ | async; as user) {
       <div [ngSwitch]="game.status" class="w-full center-layout">
         <ng-container *ngSwitchCase="'PENDING'">
           <h2>Nice to see you again, {{ user.name }}!</h2>
@@ -73,6 +73,11 @@
           <app-final-score class="w-full max-w-[400px]"></app-final-score>
         </div>
       </div>
+    } @else {
+      <!-- No user, show registration -->
+      <app-register [gameId]="_id"></app-register>
     }
-  }
-</div>
+  </div>
+} @else {
+  <!-- Game not found :( -->
+}

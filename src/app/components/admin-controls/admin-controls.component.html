@@ -1,56 +1,76 @@
 @if (game$ | async; as game) {
-  <div>
-    <h2>{{ game.name }}</h2>
-  </div>
-  <div class="flex items-baseline">
+  <div class="center-layout text-center">
     @if (game.status === "PENDING") {
-      <button mat-flat-button class="mr-4" (click)="startGame()">
-        Start game
-      </button>
+      <div class="text-lg">
+        Game is not yet started, share this link with people to join.
+      </div>
+      <div class="p-3 mt-2 mb-4 border border-white">
+        {{ gameLink }}
+      </div>
+
+      <div class="italic mb-2">
+        When enough people have joined, you can start the game! Players can
+        still join in after the game is started :)
+      </div>
+      <button mat-flat-button (click)="startGame()">Start game</button>
     }
     @if (game.status === "STARTED") {
-      @if (game.words.length) {
-        <button mat-flat-button (click)="nextWord()">Next word</button>
-      }
-      <span class="ml-2 mr-3">Words left: {{ game.words.length }}</span>
+      <div class="p-3 mt-2 mb-4 border border-white">
+        {{ gameLink }}
+      </div>
+      <div class="flex items-center mb-3">
+        <span class="italic opacity-80 mr-3">Current word:</span>
+        <span class="animate__animated animate__fadeInDown">
+          {{ game.word }}
+        </span>
+        <div class="border-r border-r-white h-5 mx-5"></div>
+        @if (game.words.length) {
+          <button mat-flat-button (click)="nextWord()">Next word</button>
+        }
+      </div>
       <button mat-flat-button (click)="endGame()">End game</button>
     }
   </div>
+
+  <div class="flex justify-around w-full max-w-screen-md mt-5">
+    <div class="w-[250px]">
+      <h2>Players</h2>
+      @if (users$ | async; as users) {
+        @if (users.length) {
+          <div *ngFor="let user of users">
+            {{ user.name }}
+          </div>
+        } @else {
+          <div>No players have joined yet.</div>
+        }
+      }
+    </div>
+    <div>
+      <h2>Words</h2>
+      <form (ngSubmit)="addWord()" [formGroup]="form">
+        <mat-form-field appearance="fill">
+          <mat-label>Enter word</mat-label>
+          <input matInput formControlName="word" placeholder="Word" />
+        </mat-form-field>
+        <button
+          class="ml-3"
+          mat-flat-button
+          [disabled]="form.invalid"
+          type="submit"
+        >
+          Add word
+        </button>
+      </form>
+
+      <div>Words left in the game</div>
+      @for (keyword of game.words; track keyword) {
+        <mat-chip (removed)="removeWord(keyword)" class="mr-2 mb-2">
+          {{ keyword }}
+          <button matChipRemove aria-label="'remove word ' + keyword">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+      }
+    </div>
+  </div>
 }
-
-<div class="mt-5">
-  <div>Add word</div>
-  <form (ngSubmit)="addWord()" [formGroup]="form">
-    <mat-form-field appearance="fill">
-      <mat-label>Enter word</mat-label>
-      <input matInput formControlName="word" placeholder="Word" />
-    </mat-form-field>
-    <button
-      class="ml-3"
-      mat-flat-button
-      [disabled]="form.invalid"
-      type="submit"
-    >
-      Add word
-    </button>
-  </form>
-</div>
-
-<div class="mt-4">
-  <hr />
-  <div class="pt-2">Create new game?</div>
-  <form (ngSubmit)="createGame()" [formGroup]="gameForm">
-    <mat-form-field appearance="fill">
-      <mat-label>Game name</mat-label>
-      <input matInput formControlName="name" placeholder="Name" />
-    </mat-form-field>
-    <button
-      class="ml-3"
-      mat-flat-button
-      [disabled]="gameForm.invalid"
-      type="submit"
-    >
-      New game
-    </button>
-  </form>
-</div>
