@@ -15,6 +15,7 @@ import { Observable } from 'rxjs';
 import { GameUser } from '../../models/user.model';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { AnswersComponent } from '../answers/answers.component';
 
 @Component({
   selector: 'app-admin-controls',
@@ -28,6 +29,7 @@ import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
     MatChipsModule,
     FormsModule,
     MatIconModule,
+    AnswersComponent,
   ],
   templateUrl: './admin-controls.component.html',
   styleUrl: './admin-controls.component.scss',

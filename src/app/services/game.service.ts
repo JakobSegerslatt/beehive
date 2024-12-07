@@ -165,6 +165,7 @@ export class GameService {
       tap((x: GameInfo) => (this.activeGame = x)),
     );
     this.setUsers(gameId);
+    this.setAnswers(gameId);
   }
 
   setAnswers(gameId: string) {

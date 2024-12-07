@@ -13,9 +13,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AnswersComponent } from '../answers/answers.component';
 import { Timer } from 'papilion';
-import { FinalScoreComponent } from '../../final-score/final-score.component';
 import { user } from '@angular/fire/auth';
 import { RegisterComponent } from '../register/register.component';
+import { FinalScoreComponent } from '../final-score/final-score.component';
 
 @Component({
   selector: 'app-play',
