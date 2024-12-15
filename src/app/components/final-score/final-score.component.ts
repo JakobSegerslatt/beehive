@@ -1,16 +1,26 @@
 import { Component, inject } from '@angular/core';
-import { map, Observable, switchMap, take, timer } from 'rxjs';
+import {
+  BehaviorSubject,
+  map,
+  Observable,
+  switchMap,
+  take,
+  tap,
+  timer,
+} from 'rxjs';
 import { groupArrayByProperty } from 'papilion';
 import uniqBy from 'lodash-es/uniqBy';
 import { CommonModule } from '@angular/common';
 import { Answer } from '../../models/game.model';
 import { GameUser } from '../../models/user.model';
 import { GameService } from '../../services/game.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 
 @Component({
   selector: 'app-final-score',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatProgressSpinnerModule, ProgressBarComponent],
   templateUrl: './final-score.component.html',
   styleUrl: './final-score.component.scss',
 })
@@ -19,8 +29,9 @@ export class FinalScoreComponent {
 
   user$ = this.gameService.user$;
 
+  loading$ = new BehaviorSubject(true);
   // Grab all answers
-  score$: Observable<Array<GameUser>> = timer(2000).pipe(
+  score$: Observable<Array<GameUser>> = timer(3000).pipe(
     take(1),
     switchMap(() =>
       this.gameService.answers$!.pipe(
@@ -44,9 +55,8 @@ export class FinalScoreComponent {
             );
 
             // For each word, group by answer
-            const grouped = groupArrayByProperty(
-              answersForWord,
-              (a) => a.answer,
+            const grouped = groupArrayByProperty(answersForWord, (a) =>
+              comparator(a.answer),
             )
               .sort((a, b) => b.length - a.length)
               .map((g) => ({
@@ -77,11 +87,15 @@ export class FinalScoreComponent {
           // Return users and scores
           return users.sort((a, b) => (b.score || 0) - (a.score || 0));
         }),
+        tap(() => this.loading$.next(false)),
       ),
     ),
   );
 
   isSameWord(a: string, b: string): boolean {
-    return a?.trim()?.toLocaleLowerCase() === b?.trim()?.toLocaleLowerCase();
+    return comparator(a) === comparator(b);
   }
 }
+
+/** Trim and lowercase word */
+export const comparator = (a?: string) => a?.trim()?.toLocaleLowerCase() || '';

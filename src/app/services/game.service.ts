@@ -81,13 +81,17 @@ export class GameService {
   }
 
   // Admin methods
-  nextWord() {
+  nextWord(word?: string) {
     const words = this.activeGame!.words;
-    const randomIndex = Math.floor(Math.random() * words.length);
-    const selectedWord = words[randomIndex];
-    words.splice(randomIndex, 1);
+    if (word) {
+      words.splice(words.indexOf(word), 1);
+    } else {
+      const randomIndex = Math.floor(Math.random() * words.length);
+      word = words[randomIndex];
+      words.splice(randomIndex, 1);
+    }
 
-    updateDoc(this.activeGameRef!, { words, word: selectedWord });
+    updateDoc(this.activeGameRef!, { words, word });
   }
 
   addWord(word: string) {

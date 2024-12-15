@@ -1,6 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   FormControl,
   FormGroup,
@@ -30,6 +31,7 @@ import { AnswersComponent } from '../answers/answers.component';
     FormsModule,
     MatIconModule,
     AnswersComponent,
+    MatTooltipModule,
   ],
   templateUrl: './admin-controls.component.html',
   styleUrl: './admin-controls.component.scss',
@@ -64,8 +66,8 @@ export class AdminControlsComponent {
     this.form.reset();
   }
 
-  nextWord() {
-    this.gameService.nextWord();
+  nextWord(word?: string) {
+    this.gameService.nextWord(word);
   }
 
   startGame() {

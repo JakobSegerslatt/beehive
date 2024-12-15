@@ -2,6 +2,10 @@
   <div>User</div>
   <div>Score</div>
 </div>
+
+@if (loading$ | async) {
+  <app-progress-bar class="block mt-3" [time]="3000"></app-progress-bar>
+}
 @for (user of score$ | async; track $index) {
   <!-- Only show top 5 and this users score -->
   @if ($index < 20 || user.id === gameService.userRef?.id) {
