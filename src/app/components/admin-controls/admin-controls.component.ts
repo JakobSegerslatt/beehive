@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -12,11 +12,12 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap, timer } from 'rxjs';
 import { GameUser } from '../../models/user.model';
 import { MatIconModule } from '@angular/material/icon';
-import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips';
 import { AnswersComponent } from '../answers/answers.component';
+import { GameInfo } from '../../models/game.model';
 
 @Component({
   selector: 'app-admin-controls',
@@ -41,12 +42,17 @@ export class AdminControlsComponent {
     this.loadGame(gameId);
   }
   private gameService: GameService = inject(GameService);
-  game$ = this.gameService.activeGame$;
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+  game$: Observable<GameInfo> | undefined;
   users$?: Observable<GameUser[]>;
 
   form = new FormGroup({
     word: new FormControl('', [Validators.required, Validators.minLength(1)]),
   });
+
+  showAnswers$ = new BehaviorSubject<boolean>(true);
+  maxTime = 0;
 
   get gameLink() {
     return window.location.host + '/play/' + this.gameService.activeGameRef?.id;
@@ -67,7 +73,15 @@ export class AdminControlsComponent {
   }
 
   nextWord(word?: string) {
+    this.showAnswers$.next(false);
     this.gameService.nextWord(word);
+    timer(4000 + this.maxTime * 1000).subscribe(() =>
+      this.showAnswers$.next(true),
+    );
+  }
+
+  updateSeconds() {
+    this.gameService.updatetime(this.maxTime);
   }
 
   startGame() {
@@ -80,7 +94,12 @@ export class AdminControlsComponent {
 
   loadGame(gameId: string) {
     this.gameService.setActiveGame(gameId);
-    this.game$ = this.gameService.activeGame$;
+    this.game$ = this.gameService.activeGame$?.pipe(
+      tap((game) => {
+        this.maxTime = game.maxTime;
+        this.cdr.detectChanges();
+      }),
+    );
     this.users$ = this.gameService.userCollection$!;
   }
 }

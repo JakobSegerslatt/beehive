@@ -36,6 +36,14 @@
 
   <div class="flex justify-around w-full max-w-screen-md mt-5">
     <div class="w-[50%]">
+      @if ((showAnswers$ | async) && game.status === "STARTED") {
+        <div class="mt-5 mr-5">
+          <h2>Answers</h2>
+          <app-answers class="w-full max-w-[400px]"></app-answers>
+        </div>
+
+        <div class="border-b border-white mr-5"></div>
+      }
       <h2>Players</h2>
       @if (users$ | async; as users) {
         @if (users.length) {
@@ -48,6 +56,22 @@
       }
     </div>
     <div class="w-[50%]">
+      <h2>Timer</h2>
+      <div class="flex items-baseline">
+        <mat-form-field appearance="fill" class="w-[270px]">
+          <mat-label>How many seconds do the players have?</mat-label>
+          <input matInput [(ngModel)]="maxTime" />
+        </mat-form-field>
+        <button
+          class="ml-3"
+          mat-flat-button
+          type="button"
+          (click)="updateSeconds()"
+        >
+          Save
+        </button>
+      </div>
+
       <h2>Words</h2>
       <form (ngSubmit)="addWord()" [formGroup]="form">
         <mat-form-field appearance="fill">
@@ -64,27 +88,23 @@
         </button>
       </form>
 
+      <div class="italic">
+        Click on a word to select it as the next word, otherwise a random word
+        is used.
+      </div>
       <div>Words left in the game</div>
       @for (keyword of game.words; track keyword) {
         <mat-chip
           (removed)="removeWord(keyword)"
           (click)="game.status === 'STARTED' ? nextWord(keyword) : null"
-          matTooltip="Select this word"
           class="mr-2 mb-2"
         >
           {{ keyword }}
-          <button matChipRemove aria-label="'remove word ' + keyword">
+          <button matChipRemove>
             <mat-icon>cancel</mat-icon>
           </button>
         </mat-chip>
       }
     </div>
   </div>
-
-  @if (game.status === "STARTED") {
-    <div class="mt-5">
-      <h2>Answers</h2>
-      <app-answers class="w-full max-w-[400px]"></app-answers>
-    </div>
-  }
 }
