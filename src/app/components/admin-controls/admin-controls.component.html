@@ -2,65 +2,77 @@
   <div class="center-layout text-center">
     @if (game.status === "PENDING") {
       <div class="text-lg">
-        Game is not yet started, share this link with people to join.
+        Spelet är inte startat än! Dela länken med personer så kan de hoppa in i
+        spelet.
       </div>
       <div class="p-3 mt-2 mb-4 border border-white">
         {{ gameLink }}
       </div>
 
       <div class="italic mb-2 mt-5">
-        When enough people have joined, you can start the game!
-        <div>Players can still join in after the game is started :)</div>
+        När alla är redo kan du starta spelet!
+        <div>Nya spelare kan hoppa in i ett redan startat spel :)</div>
       </div>
-      <button mat-flat-button (click)="startGame()">Start game</button>
+      <button mat-flat-button (click)="startGame()">Starta spel</button>
     }
     @if (game.status === "STARTED") {
       <div class="p-3 mt-2 mb-4 border border-white">
         {{ gameLink }}
       </div>
       <div class="flex items-center mb-3">
-        <span class="italic opacity-80 mr-3">Current word:</span>
+        <span class="italic opacity-80 mr-3">Nuvarande ord:</span>
         <span class="animate__animated animate__fadeInDown">
           {{ game.word }}
         </span>
         <div class="border-r border-r-white h-5 mx-5"></div>
         @if (game.words.length) {
-          <button mat-flat-button (click)="nextWord()">Next word</button>
+          <button mat-flat-button (click)="nextWord()">
+            Nästa ord (randomiserat)
+          </button>
         }
       </div>
-      <button mat-flat-button (click)="endGame()">End game</button>
+      <button mat-flat-button (click)="endGame()">Avsluta spel</button>
     }
   </div>
 
   <div class="border-t border-white w-[80%] mt-5"></div>
 
   <div class="flex justify-around w-full max-w-screen-md mt-5">
-    <div class="w-[50%]">
+    <div class="w-[50%] pr-6">
       @if ((showAnswers$ | async) && game.status === "STARTED") {
-        <div class="mt-5 mr-5">
-          <h2>Answers</h2>
+        <div class="mt-5">
+          <h2>Svar</h2>
           <app-answers class="w-full max-w-[400px]"></app-answers>
         </div>
 
         <div class="border-b border-white mr-5"></div>
       }
-      <h2>Players</h2>
+      @if (game.status === "COMPLETE") {
+        <div>
+          <h2>Slutresultat</h2>
+          <app-final-score class="w-full max-w-[400px]"></app-final-score>
+        </div>
+      }
+      <h2>Spelare</h2>
       @if (users$ | async; as users) {
         @if (users.length) {
           <div *ngFor="let user of users">
             {{ user.name }}
           </div>
         } @else {
-          <div>No players have joined yet.</div>
+          <div class="italic text-sm opacity-80">
+            Inga spelare har gått med än.
+          </div>
         }
       }
     </div>
     <div class="w-[50%]">
-      <h2>Timer</h2>
+      <h2>Spellinställningar</h2>
+      <h3>Tidsgräns per ord</h3>
       <div class="flex items-baseline">
-        <mat-form-field appearance="fill" class="w-[270px]">
-          <mat-label>How many seconds do the players have?</mat-label>
-          <input matInput [(ngModel)]="maxTime" />
+        <mat-form-field appearance="fill">
+          <mat-label>Antal sekunder</mat-label>
+          <input matInput type="number" [(ngModel)]="maxTime" />
         </mat-form-field>
         <button
           class="ml-3"
@@ -68,15 +80,15 @@
           type="button"
           (click)="updateSeconds()"
         >
-          Save
+          Spara
         </button>
       </div>
 
-      <h2>Words</h2>
+      <h3>Lägg till ord</h3>
       <form (ngSubmit)="addWord()" [formGroup]="form">
         <mat-form-field appearance="fill">
-          <mat-label>Enter word</mat-label>
-          <input matInput formControlName="word" placeholder="Word" />
+          <mat-label>Nytt ord</mat-label>
+          <input matInput formControlName="word" />
         </mat-form-field>
         <button
           class="ml-3"
@@ -84,15 +96,11 @@
           [disabled]="form.invalid"
           type="submit"
         >
-          Add word
+          Lägg till
         </button>
       </form>
 
-      <div class="italic">
-        Click on a word to select it as the next word, otherwise a random word
-        is used.
-      </div>
-      <div>Words left in the game</div>
+      <h3 class="mt-4">Ordlista för spelet</h3>
       @for (keyword of game.words; track keyword) {
         <mat-chip
           (removed)="removeWord(keyword)"
@@ -105,6 +113,10 @@
           </button>
         </mat-chip>
       }
+      <div class="italic text-sm mt-3 opacity-80">
+        Tips! Under spelets gång kan du klicka på ett ord för att använda det
+        som nästa ord.
+      </div>
     </div>
   </div>
 }

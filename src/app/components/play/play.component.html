@@ -3,9 +3,9 @@
     @if (gameService.user$ | async; as user) {
       <div [ngSwitch]="game.status" class="w-full center-layout">
         <ng-container *ngSwitchCase="'PENDING'">
-          <h2>Nice to see you again, {{ user.name }}!</h2>
+          <h2>Hej och välkommen, {{ user.name }}!</h2>
           <div class="mt-3 italic">
-            Game is not yet started, you can relax :)
+            Spelet har inte börjat än, du kan ta det lugnt :)
           </div>
           <img
             src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGdieXJ5NzQ0dDY3NmFxdHkyeWtvcTVnaXE3bm14dHFieWZ1MzljdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tXL4FHPSnVJ0A/giphy.gif"
@@ -17,7 +17,7 @@
 
         <ng-container *ngSwitchCase="'STARTED'">
           @if (countdown$ | async; as countdown) {
-            <span> Next word in </span>
+            <span>Nytt ord om </span>
             @if (countdown === 3) {
               <h1 class="countdown animate__animated animate__bounceIn">
                 {{ countdown }}
@@ -35,7 +35,7 @@
             }
           } @else {
             <!-- ANSWER TEMPLATE -->
-            <div class="italic opacity-80">Current word..</div>
+            <div class="italic opacity-80">Nuvarande ord..</div>
             <h1 class="animate__animated animate__fadeInDown">
               {{ game.word }}
             </h1>
@@ -50,25 +50,25 @@
               </mat-progress-bar>
 
               <div class="mt-3">
-                Your answer is automaticly submitted when the timer runs out!
+                Ditt svar sparas automatiskt när tiden är slut!
               </div>
               <mat-form-field class="mt-6 animate__animated animate__fadeIn">
-                <mat-label>Your answer</mat-label>
+                <mat-label>Ditt svar</mat-label>
                 <input
                   matInput
                   [(ngModel)]="inputAnswer"
-                  placeholder="Type something fast!"
+                  placeholder="Skriv något fort!"
                 />
               </mat-form-field>
             } @else {
-              <h2>Times up!</h2>
+              <h2>Tiden är slut!</h2>
 
               <app-answers class="w-full max-w-[400px]"></app-answers>
             }
           }
         </ng-container>
         <div *ngSwitchCase="'COMPLETE'">
-          <h2>Game's finished! Good job!</h2>
+          <h2>Spelet är slut! Bra jobbat!</h2>
 
           <app-final-score class="w-full max-w-[400px]"></app-final-score>
         </div>

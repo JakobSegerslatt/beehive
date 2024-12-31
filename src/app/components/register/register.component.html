@@ -1,14 +1,25 @@
 <div class="center-layout">
-  <h2>Enter your name to you join</h2>
+  <h2>Nu spelar vi Hivemind!</h2>
 
-  <form class="mt-4" (ngSubmit)="submit()" [formGroup]="form">
+  <p class="italic">
+    I Hivemind så kommer du se ett ord eller en fras, och så ska du svara vad du
+    tror att alla andra svarar!
+  </p>
+  <p class="italic mt-3">
+    De spelare som skriver det mest svarade ordet får ett poäng! Här handlar det
+    alltså om att inte vara unik, utan mainstream!
+  </p>
+
+  <h3 class="self-start mt-8">Välj ditt användarnamn</h3>
+
+  <form class="self-start" (ngSubmit)="submit()" [formGroup]="form">
     <div class="flex items-baseline">
       <mat-form-field class="mr-3">
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" placeholder="Enter your name" />
+        <mat-label>Namn</mat-label>
+        <input matInput formControlName="name" />
       </mat-form-field>
-      <button mat-raised-button [disabled]="form.invalid" type="submit">
-        Let's go
+      <button mat-flat-button [disabled]="form.invalid" type="submit">
+        Nu kör vi!
       </button>
     </div>
   </form>

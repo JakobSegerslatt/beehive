@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { AnswersComponent } from '../answers/answers.component';
 import { GameInfo } from '../../models/game.model';
+import { FinalScoreComponent } from '../final-score/final-score.component';
 
 @Component({
   selector: 'app-admin-controls',
@@ -33,6 +34,7 @@ import { GameInfo } from '../../models/game.model';
     MatIconModule,
     AnswersComponent,
     MatTooltipModule,
+    FinalScoreComponent,
   ],
   templateUrl: './admin-controls.component.html',
   styleUrl: './admin-controls.component.scss',
